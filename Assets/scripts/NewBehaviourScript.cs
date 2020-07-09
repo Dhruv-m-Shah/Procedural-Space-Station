@@ -23,6 +23,7 @@ public class NewBehaviourScript : MonoBehaviour
             if(visitedPipes[i].transform.position.x == location.x && visitedPipes[i].transform.position.z == location.z)
             {
                 Destroy(visitedPipes[i]);
+                visitedPipes.RemoveAt(i);
                 return true;
             }
         }
@@ -62,7 +63,7 @@ public class NewBehaviourScript : MonoBehaviour
         {
             visitedPipes.Add(Instantiate(pipe, new Vector3(junction.x, junction.y, junction.z - 3.5f), Quaternion.Euler(270, 0, 0)));
         }
-            
+
     }
     public void AddPipeLeft(Vector3 junction)
     {
@@ -124,9 +125,27 @@ public class NewBehaviourScript : MonoBehaviour
 
 
     }
+/*
+    public bool renderCheck(Vector3 tunnelPiece) 
+    {
+        private float renderDist = 10.5;
 
+        private float playerX = GameObject.Find("Main Camera").transform.position.x;
+        private float playerY = GameObject.Find("Main Camera").transform.position.y;
+        private float pieceX = GameObject.Find("tunnelPiece").transform.position.x;
+        private float pieceY = GameObject.Find("tunnelPiece").transform.position.y;
+        private float pieceDist = sqrt(abs(((pieceX - playerX) ** 2) + ((pieceY - playerY) ** 2)));
 
+        private bool render = true;
 
+        if (pieceDist > renderDist) 
+        {
+            render = false;
+        }
+
+        return render;
+    }
+*/
     void Start()
     {
 
@@ -160,12 +179,24 @@ public class NewBehaviourScript : MonoBehaviour
         }
 
 
-
     }
 
     // Update is called once per frame
     void Update()
     { 
-
-    }
-}
+        float cameraX;
+        float cameraY;
+        for (int j = 0; j < visitedPipes.Count(); j++)
+        {
+            cameraX = GameObject.Find("Main Camera").transform.position.x;
+            cameraY = GameObject.Find("Main Camera").transform.position.y;
+            if (Math.Pow(Math.Pow(cameraX - visitedPipes[j].transform.position.x, 2) + Math.Pow(cameraY - visitedPipes[j].transform.position.y, 2), 0.5) > 10.5f)
+            {
+                visitedPipes[j].GetComponent<Renderer>().enabled = false;
+            }
+            else
+            {
+                visitedPipes[j].GetComponent<MeshRenderer>().enabled = true;
+            }
+        }
+    }}
